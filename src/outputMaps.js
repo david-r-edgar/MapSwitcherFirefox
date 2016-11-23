@@ -815,7 +815,7 @@ var outputMapServices = [
 
             var lang = "";
             //extract the highest priority language (fr or nl) from chrome preferences
-            chrome.i18n.getAcceptLanguages(function (list) {
+            browser.i18n.getAcceptLanguages(function (list) {
                 for (listLang of list) {
                     if (listLang.match(/^fr/)) {
                         lang = "lang=fr&";

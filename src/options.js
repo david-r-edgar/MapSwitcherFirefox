@@ -26,7 +26,7 @@ function save_options() {
     $("#mapsTickList .outpServiceEnabledChk").each(function() {
         mapChecks[$(this).attr("id")] = $(this).is(":checked");
     });
-    chrome.storage.sync.set(mapChecks, function() {
+    browser.storage.local.set(mapChecks, function() {
         $("#status").text("Options saved.");
         setTimeout(function() {
             $("#status").text("");
@@ -46,7 +46,7 @@ function restore_options() {
             $("#mapsTickList tbody").append(mapEntry);
         mapDefaults[outputMapService.id] = true;
     }
-    chrome.storage.sync.get(mapDefaults, function(items) {
+    browser.storage.local.get(mapDefaults, function(items) {
         $("#mapsTickList .outpServiceEnabledChk").each(function() {
             $(this).prop("checked", items[$(this).attr("id")]);
         });

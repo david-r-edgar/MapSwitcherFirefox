@@ -152,7 +152,7 @@ var MapLinksView = {
             var filename = fileData.name;
             var contentBlob = new Blob([fileData.content], {type: fileData.type});
             var gpxURL = URL.createObjectURL(contentBlob);
-            chrome.downloads.download({
+            browser.downloads.download({
                 url: gpxURL,
                 filename: filename
             });
@@ -289,7 +289,6 @@ var MapSwitcher = {
     */
     run: function(sourceMapData) {
         if (sourceMapData.nonUpdating !== undefined) {
-
             var modal = document.getElementById('warningModal');
             modal.style.display = "block";
 
@@ -341,7 +340,7 @@ var MapSwitcher = {
                 mapOptDefaults = {}
                 mapOptDefaults[outputMapService.id] = true;
 
-                chrome.storage.sync.get(mapOptDefaults, function(options) {
+                browser.storage.local.get(mapOptDefaults, function(options) {
                     if (options[outputMapService.id]) {
                         outputMapService.generate(sourceMapData, MapLinksView);
                     }
@@ -395,10 +394,10 @@ window.onclick = function(event) {
 $(document).ready(function() {
 
     var sourceDataListener = new Promise(function(resolve, reject) {
-        chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             resolve(request.sourceMapData);
         });
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
             if ((tabs[0].url.indexOf("chrome://") >= 0) ||
                 (tabs[0].url.indexOf("chrome-extension://") >= 0)) {
                 reject(null);
@@ -407,9 +406,9 @@ $(document).ready(function() {
     });
 
     var scriptExec = new ScriptExecution()
-        .executeScripts("vendor/jquery/jquery-2.2.4.min.js",
-                        "src/mapUtil.js",
-                        "src/dataExtractor.js");
+        .executeScripts("/vendor/jquery/jquery-2.2.4.min.js",
+                        "/src/mapUtil.js",
+                        "/src/dataExtractor.js");
 
     Promise.all([sourceDataListener, scriptExec])
         .then(s => s[0])
