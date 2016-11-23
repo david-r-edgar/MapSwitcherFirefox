@@ -3,10 +3,12 @@ body {
   font-size: 80%;
   background-color: #eee;
   margin: 4px;
+  height: 600px;
 }
 .borderBox {
   background-color: #fff;
   padding: 4px;
+  min-width: 320px;
 }
 #mainBorderBox {
   margin-top: 4px;
