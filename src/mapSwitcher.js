@@ -1,3 +1,12 @@
+/**
+ * The Web Extension API is implemented on different root objects in different browsers.
+ * Firefox uses 'browser'. Chrome uses 'chrome'.
+ * Checking here allows us to use a common 'browser' everywhere.
+ */
+if ("undefined" === typeof browser) {
+    browser = chrome;
+}
+
 
 /**
  * CodeGrid is a service for identifying the country within which a coordinate

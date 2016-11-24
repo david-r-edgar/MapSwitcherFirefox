@@ -12,6 +12,14 @@ window.onload = function() {
         window.location = window.location + '#loaded';
         window.location.reload();
     }
+
+/**
+ * The Web Extension API is implemented on different root objects in different browsers.
+ * Firefox uses 'browser'. Chrome uses 'chrome'.
+ * Checking here allows us to use a common 'browser' everywhere.
+ */
+if ("undefined" === typeof browser) {
+    browser = chrome;
 }
 
 function updateSelectAllNone() {
@@ -34,7 +42,9 @@ $("#selectAllNone").change(function(ev) {
 });
 
 
-
+/**
+ * Saves the extension options in browser storage.
+ */
 function save_options() {
     var mapChecks = {};
     $("#mapsTickList .outpServiceEnabledChk").each(function() {
@@ -48,6 +58,9 @@ function save_options() {
     });
 }
 
+/**
+ * Loads the extension options from browser storage.
+ */
 function restore_options() {
     var mapDefaults = {};
     $("#mapsTickList tbody").html("");
