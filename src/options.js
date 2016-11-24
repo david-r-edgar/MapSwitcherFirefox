@@ -1,4 +1,18 @@
-
+/**
+ * This is an ugly, ugly hack.
+ *
+ * browser.storage.local.get was failing (Firefox 49) to either resolve or reject, when
+ * options was loaded from the options button in the popup. But on a reload, it resolves
+ * as expected. So we do a one-off reload here.
+ *
+ * Test sometime later and remove this.
+ */
+window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+}
 
 function updateSelectAllNone() {
     var totalServices = $("#mapsTickList .outpServiceEnabledChk").length;
