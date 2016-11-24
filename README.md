@@ -1,28 +1,22 @@
 # MapSwitcher
 
-Chrome extension to switch from one online map provider to another, maintaining (as far as possible) the map centre, zoom level, and directions of the source map.
+Firefox add-on to switch from one online map provider to another, maintaining (as far as possible) the map centre, zoom level, and directions of the source map.
 
 ## Installation
 
-Most users will want to use the released version, [available on the Chrome Store](https://chrome.google.com/webstore/detail/map-switcher/fanpjcbgdinjeknjikpfnldfpnnpkelb).
+TBD
 
 ### To install the development version
-If you're interested in contributing to its development, modifying the extension for your own use, or simply using the most recent code, you should follow these steps:
-- Clone this repository
-- Open [chrome://extensions/](chrome://extensions/) in your browser
-- Check the 'Developer Mode' checkbox
-- Choose 'Load unpacked extension...' and select the root directory (which contains `manifest.json`)
+
+TBD
 
 ### Building the release version
 
-The included makefile allows you to build for release. Currently you may need to adapt it according to your local set-up. As of 24 June 2016, you must install the 'harmony' branch of uglifyjs in order to mangle ES6 JavaScript code.
-
-`make all` will build into a 'release' directory, generating or copying all necessary files. It can be tested using the chrome://extensions 'Load unpacked extension...' option (see above) and packed through the same page.
+TBD
 
 ## Browsers supported
-- Chromium - Tested
-- Chrome -  Partially tested
-- Opera - Unknown
+
+TBD
 
 ## Mapping services supported
 
