@@ -25,6 +25,11 @@
   },
   "content_scripts": [{
     "matches": ["http://*/*", "https://*/*"]
+    "js": [
+      "vendor/jquery/jquery-2.2.4.min.js",
+      "src/mapUtil.js",
+      "src/dataExtractor.js"
+    ]
   }],
   "icons": {
     "16": "image/mapswitcher16x16.png",
