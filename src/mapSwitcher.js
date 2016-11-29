@@ -415,9 +415,10 @@ $(document).ready(function() {
     });
 
     var scriptExec = new ScriptExecution()
-        .executeScripts("/vendor/jquery/jquery-2.2.4.min.js",
-                        "/src/mapUtil.js",
-                        "/src/dataExtractor.js");
+        .executeScripts("vendor/jquery/jquery-2.2.4.min.js",
+                        "vendor/google-maps-data-parameter-parser/src/googleMapsDataParameter.js",
+                        "src/mapUtil.js",
+                        "src/dataExtractor.js");
 
     Promise.all([sourceDataListener, scriptExec])
         .then(s => s[0])
