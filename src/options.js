@@ -56,6 +56,7 @@ $("#selectAllNone").change(function(ev) {
     $(".chkboxcell .outpServiceEnabledChk").each(function() {
         $(this).prop("checked", checked);
     });
+    saveOptions();
 });
 
 
@@ -63,15 +64,20 @@ $("#selectAllNone").change(function(ev) {
  * Saves the extension options in browser storage.
  */
 function saveOptions() {
+    $("#status").text("Saving...");
     var mapChecks = {};
     $("#mapsTickList .outpServiceEnabledChk").each(function() {
         mapChecks[$(this).attr("id")] = $(this).is(":checked");
     });
     browser.storage.local.set(mapChecks, function() {
-        $("#status").text("Options saved.");
         setTimeout(function() {
+            $("#status").text("Options saved.");
+        }, 1000);
+        /*
+        $("#status").text("Options saved.");
             $("#status").text("");
         }, 1500);
+        */
     });
 }
 
@@ -112,14 +118,21 @@ function restoreOptions() {
 
         $("#mapsTickList").sortElems("> tbody > tr.omsrvRow");
     });
+
+    $(".outpServiceEnabledChk").change(saveOptions);
 }
 
 function resetToDefaults() {
-    browser.storage.local.clear();
-    restoreOptions();
+    var result = confirm("Reset all options to initial defaults?");
+    if (result) {
+        browser.storage.local.clear();
+        restoreOptions();
+        $("#status").text("Default options restored.");
+    }
 }
 
 function optionsSorted(event, ui) {
+    $("#status").text("Saving...");
     var mapPriorities = {};
     var newPriority = 1;
     $("tr.omsrvRow").each(function() {
@@ -136,6 +149,9 @@ function optionsSorted(event, ui) {
     });
 
     browser.storage.local.set(mapPriorities, function() {
+        setTimeout(function() {
+            $("#status").text("Options saved.");
+        }, 1000);
     });
 }
 
@@ -145,6 +161,6 @@ $(document).ready(function() {
         stop: optionsSorted
     });
 });
-$("#cancel").click(restoreOptions);
-document.getElementById("save").addEventListener("click", saveOptions);
+/*$("#cancel").click(restoreOptions);*/
+/*document.getElementById("save").addEventListener("click", saveOptions);*/
 $("#reset").click(resetToDefaults);
