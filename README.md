@@ -43,6 +43,7 @@ TBD
 - SunCalc
 - SysMaps
 - OpenCycleMap
+- Facebook (pages and events)
 
 ### Output mapping services
 
@@ -78,6 +79,7 @@ TBD
 - OpenWeatherMap
 - SunCalc
 - Boulter (coordinate conversion)
+- Flickr (map of nearby photos)
 
 ## Known issues
 
