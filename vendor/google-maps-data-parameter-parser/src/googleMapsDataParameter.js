@@ -365,3 +365,8 @@ Gmdp.prototype.getMapType = function() {
 Gmdp.prototype.getStreetviewURL = function() {
     return this.svURL;
 }
+
+function gmdp_dummy() {
+    return null;
+}
+gmdp_dummy();

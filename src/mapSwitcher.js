@@ -32,7 +32,11 @@ jQuery.fn.sortDivs = function sortDivs() {
         return ($(b).data("sort")) < ($(a).data("sort")) ? 1 : -1; }
 }
 
-
+jQuery.fn.clickCloses = function clickCloses() {
+    this.click(function() {
+        setTimeout(function() {window.close();}, 200);
+    });
+}
 
 
 
@@ -167,10 +171,11 @@ var MapLinksView = {
             var filename = fileData.name;
             var contentBlob = new Blob([fileData.content], {type: fileData.type});
             var gpxURL = URL.createObjectURL(contentBlob);
-            browser.downloads.download({
+            var downloading = browser.downloads.download({
                 url: gpxURL,
                 filename: filename
             });
+            downloading.then(function() {}, function() {});
         });
     },
 
@@ -374,6 +379,7 @@ var MapSwitcher = {
     * Hide the animated loading dots.
     */
     loaded: function(s) {
+        $(".maplink").clickCloses();
         $(".loading").hide();
         $("#sourceDescr").show();
     }
@@ -408,6 +414,9 @@ $(document).ready(function() {
         });
     });
 
+    //firefox (not reqd for chrome): set up links to force popup close on click
+    $("#ctrlButtons a").clickCloses();
+
     var scriptExec = new ScriptExecution()
         .executeScripts("/vendor/jquery/jquery-2.2.4.min.js",
                         "/vendor/google-maps-data-parameter-parser/src/googleMapsDataParameter.js",
@@ -422,5 +431,6 @@ $(document).ready(function() {
         .then(s => MapSwitcher.run(s))
         .then(s => MapSwitcher.loaded(s))
         .catch(s => (MapSwitcher.handleNoCoords(s)));
+
 });
 
