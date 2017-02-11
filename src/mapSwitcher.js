@@ -234,6 +234,53 @@ var MapLinksView = {
 var MapSwitcher = {
 
     /**
+     * Checks if we should continue attempting to extract data from the current tab.
+     *
+     * @return Promise which fulfils if OK to continue, otherwise rejects.
+     */
+    validateCurrentTab: function() {
+        return new Promise (function(resolve, reject) {
+            browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                if ((tabs[0].url.indexOf("mozilla.org") >= 0) ||
+                    (tabs[0].url.indexOf("about:") >= 0)) {
+                    reject(null);
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    },
+
+    /**
+     * Runs the content scripts which handle the extraction of coordinate data from the current tab.
+     *
+     * @return Promise which fulfils when complete
+     */
+    runExtraction: function() {
+        return new Promise (function(resolve, reject) {
+            new ScriptExecution().executeScripts(
+                "/vendor/jquery/jquery-2.2.4.min.js",
+                "/vendor/google-maps-data-parameter-parser/src/googleMapsDataParameter.js",
+                "/src/mapUtil.js",
+                "/src/dataExtractor.js");
+            resolve();
+        });
+    },
+
+    /**
+     * Sets up message listener to receive results from content script
+     *
+     * @return Promise which fulfils with the source map data
+     */
+    listenForExtraction: function() {
+        return new Promise(function(resolve, reject) {
+            browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+                resolve(request.sourceMapData);
+            });
+        });
+    },
+
+    /**
     * Put the extracted data in a standard format, and perform any necessary checks
     * to ensure the extracted data object is suitable for output use.
     *
@@ -392,6 +439,7 @@ var MapSwitcher = {
 
 
 
+
 /**
  * Entry routine.
  *
@@ -402,28 +450,11 @@ var MapSwitcher = {
  */
 $(document).ready(function() {
 
-    var sourceDataListener = new Promise(function(resolve, reject) {
-        browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-            resolve(request.sourceMapData);
-        });
-        browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            if ((tabs[0].url.indexOf("chrome://") >= 0) ||
-                (tabs[0].url.indexOf("chrome-extension://") >= 0)) {
-                reject(null);
-            }
-        });
-    });
-
     //firefox (not reqd for chrome): set up links to force popup close on click
     $("#ctrlButtons a").clickCloses();
 
-    var scriptExec = new ScriptExecution()
-        .executeScripts("/vendor/jquery/jquery-2.2.4.min.js",
-                        "/vendor/google-maps-data-parameter-parser/src/googleMapsDataParameter.js",
-                        "/src/mapUtil.js",
-                        "/src/dataExtractor.js");
-
-    Promise.all([sourceDataListener, scriptExec])
+    MapSwitcher.validateCurrentTab().then(function() {
+        Promise.all([MapSwitcher.listenForExtraction(), MapSwitcher.runExtraction()])
         .then(s => s[0])
         //the following functions use the result of the dataExtractor script
         .then(s => MapSwitcher.normaliseExtractedData(s))
@@ -431,6 +462,8 @@ $(document).ready(function() {
         .then(s => MapSwitcher.run(s))
         .then(s => MapSwitcher.loaded(s))
         .catch(s => (MapSwitcher.handleNoCoords(s)));
-
+    }, function() {
+        MapSwitcher.handleNoCoords();
+    });
 });
 
