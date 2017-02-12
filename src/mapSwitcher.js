@@ -360,7 +360,7 @@ var MapSwitcher = {
     *
     * @param sourceMapData
     */
-    run: function(sourceMapData) {
+    constructOutputs: function(sourceMapData) {
         if (sourceMapData.nonUpdating !== undefined) {
             var modal = document.getElementById('warningModal');
             modal.style.display = "block";
@@ -377,7 +377,6 @@ var MapSwitcher = {
                     modal.style.display = "none";
                 }
             }
-
         }
 
         document.getElementById("sourceLocnVal").textContent =
@@ -455,11 +454,12 @@ $(document).ready(function() {
 
     MapSwitcher.validateCurrentTab().then(function() {
         Promise.all([MapSwitcher.listenForExtraction(), MapSwitcher.runExtraction()])
+        //s[0] refers to the source map data received from the dataExtractor script
         .then(s => s[0])
-        //the following functions use the result of the dataExtractor script
+        //the following functions use the extracted source map data to build the view
         .then(s => MapSwitcher.normaliseExtractedData(s))
         .then(s => MapSwitcher.getCountryCode(s))
-        .then(s => MapSwitcher.run(s))
+        .then(s => MapSwitcher.constructOutputs(s))
         .then(s => MapSwitcher.loaded(s))
         .catch(s => (MapSwitcher.handleNoCoords(s)));
     }, function() {
